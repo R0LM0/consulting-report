@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime   @default(now())
+  activities   Activity[]
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  // Calendar day the activity happened - no time-of-day meaning. Stored as
+  // a plain SQL date (UTC midnight) so it round-trips without timezone
+  // drift regardless of where the app or DB run.
+  date        DateTime @db.Date
+  description String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([userId, date])
+}
