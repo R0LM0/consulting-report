@@ -74,3 +74,45 @@ export function parseIntOrDefault(
   const parsed = Number(value);
   return Number.isInteger(parsed) ? parsed : fallback;
 }
+
+/** Parses a year query param, clamped to a sane range (2000-2100). */
+export function parseYearParam(
+  value: string | undefined,
+  fallback: number
+): number {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 2000 && parsed <= 2100
+    ? parsed
+    : fallback;
+}
+
+/** Parses a single-month query param (1-12), falling back when invalid. */
+export function parseMonthParam(
+  value: string | undefined,
+  fallback: number
+): number {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 1 && parsed <= 12
+    ? parsed
+    : fallback;
+}
+
+/**
+ * Parses a multi-month query param ("3,5,7") into a sorted, de-duplicated
+ * list of valid months. Falls back to [fallback] when empty/invalid.
+ */
+export function parseMonthsParam(
+  value: string | undefined,
+  fallback: number
+): number[] {
+  if (!value) return [fallback];
+  const months = [
+    ...new Set(
+      value
+        .split(",")
+        .map(Number)
+        .filter((n) => Number.isInteger(n) && n >= 1 && n <= 12)
+    ),
+  ].sort((a, b) => a - b);
+  return months.length > 0 ? months : [fallback];
+}

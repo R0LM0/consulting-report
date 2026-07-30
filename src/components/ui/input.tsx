@@ -1,4 +1,8 @@
-import type { InputHTMLAttributes, SelectHTMLAttributes } from "react";
+import type {
+  InputHTMLAttributes,
+  SelectHTMLAttributes,
+  TextareaHTMLAttributes,
+} from "react";
 
 const baseFieldClasses =
   "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 transition-shadow focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20";
@@ -17,6 +21,20 @@ export function Select({
   return (
     <select
       className={`${baseFieldClasses} cursor-pointer pr-8 ${className}`}
+      {...props}
+    />
+  );
+}
+
+export function Textarea({
+  className = "",
+  rows = 4,
+  ...props
+}: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <textarea
+      rows={rows}
+      className={`${baseFieldClasses} resize-y leading-relaxed ${className}`}
       {...props}
     />
   );

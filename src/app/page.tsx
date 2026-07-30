@@ -7,11 +7,13 @@ import { prisma } from "@/lib/prisma";
 import {
   MESES_ES,
   formatDateDisplay,
+  getLastDayOfMonth,
   getMonthBounds,
 } from "@/lib/months";
 import { AppShell } from "@/components/app-shell";
 import { DashboardHero } from "@/components/dashboard/dashboard-hero";
 import { MonthChart, type MonthDatum } from "@/components/dashboard/month-chart";
+import { MonthHeatmap } from "@/components/dashboard/month-heatmap";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
@@ -105,6 +107,13 @@ export default async function Home() {
     current: i === month - 1,
   }));
   const monthsWithActivity = countsPerMonth.filter((c) => c > 0).length;
+
+  const heatmapProps = {
+    daysInMonth: getLastDayOfMonth(year, month).getUTCDate(),
+    firstOffset: (new Date(Date.UTC(year, month - 1, 1)).getUTCDay() + 6) % 7,
+    activeDays: monthDays.map((d) => d.date.getUTCDate()),
+    todayDay: now.getDate(),
+  };
 
   const firstName = (session.user.name ?? session.user.email ?? "").split(
     " "
@@ -222,51 +231,64 @@ export default async function Home() {
         </FadeIn>
       </div>
 
-      <FadeIn delay={0.45}>
-        <Card>
-          <CardHeader
-            title="Actividad reciente"
-            description="Tus últimos 5 registros"
-            icon={<ClipboardIcon />}
-            action={
-              <Link
-                href="/actividades"
-                className="text-xs font-medium text-brand-600 hover:text-brand-800"
-              >
-                Ver todo →
-              </Link>
-            }
-          />
-          {recent.length === 0 ? (
-            <div className="flex flex-col items-center gap-2 py-8 text-center">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-xl text-brand-400">
-                <ClipboardIcon />
-              </span>
-              <p className="text-sm font-medium text-slate-600">
-                Aún no registras actividades
-              </p>
-              <p className="text-xs text-slate-400">
-                Empieza hoy y tu informe mensual se generará solo.
-              </p>
-            </div>
-          ) : (
-            <Stagger className="flex flex-col divide-y divide-slate-100">
-              {recent.map((activity) => (
-                <StaggerItem key={activity.id}>
-                  <div className="flex items-center gap-4 py-3">
-                    <Badge tone="brand" className="shrink-0 tabular-nums">
-                      {formatDateDisplay(activity.date)}
-                    </Badge>
-                    <p className="text-sm text-slate-700">
-                      {activity.description}
-                    </p>
-                  </div>
-                </StaggerItem>
-              ))}
-            </Stagger>
-          )}
-        </Card>
-      </FadeIn>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <FadeIn delay={0.45}>
+          <Card className="h-full">
+            <CardHeader
+              title={`Calendario · ${mesNombre}`}
+              description="Días con al menos un registro"
+              icon={<CalendarIcon />}
+            />
+            <MonthHeatmap {...heatmapProps} />
+          </Card>
+        </FadeIn>
+
+        <FadeIn delay={0.55} className="lg:col-span-2">
+          <Card>
+            <CardHeader
+              title="Actividad reciente"
+              description="Tus últimos 5 registros"
+              icon={<ClipboardIcon />}
+              action={
+                <Link
+                  href="/actividades"
+                  className="text-xs font-medium text-brand-600 hover:text-brand-800"
+                >
+                  Ver todo →
+                </Link>
+              }
+            />
+            {recent.length === 0 ? (
+              <div className="flex flex-col items-center gap-2 py-8 text-center">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-xl text-brand-400">
+                  <ClipboardIcon />
+                </span>
+                <p className="text-sm font-medium text-slate-600">
+                  Aún no registras actividades
+                </p>
+                <p className="text-xs text-slate-400">
+                  Empieza hoy y tu informe mensual se generará solo.
+                </p>
+              </div>
+            ) : (
+              <Stagger className="flex flex-col divide-y divide-slate-100">
+                {recent.map((activity) => (
+                  <StaggerItem key={activity.id}>
+                    <div className="flex items-center gap-4 py-3">
+                      <Badge tone="brand" className="shrink-0 tabular-nums">
+                        {formatDateDisplay(activity.date)}
+                      </Badge>
+                      <p className="text-sm text-slate-700">
+                        {activity.description}
+                      </p>
+                    </div>
+                  </StaggerItem>
+                ))}
+              </Stagger>
+            )}
+          </Card>
+        </FadeIn>
+      </div>
     </AppShell>
   );
 }

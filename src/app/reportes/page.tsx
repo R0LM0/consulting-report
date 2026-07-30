@@ -8,7 +8,8 @@ import {
   formatDateInputValue,
   getLastDayOfMonth,
   getMonthBounds,
-  parseIntOrDefault,
+  parseMonthParam,
+  parseYearParam,
 } from "@/lib/months";
 import { AppShell, PageHeader } from "@/components/app-shell";
 import { Badge } from "@/components/ui/badge";
@@ -36,8 +37,8 @@ export default async function ReportesPage({
 
   const { anio, mes } = await searchParams;
   const now = new Date();
-  const selectedYear = parseIntOrDefault(anio, now.getFullYear());
-  const selectedMonth = parseIntOrDefault(mes, now.getMonth() + 1);
+  const selectedYear = parseYearParam(anio, now.getFullYear());
+  const selectedMonth = parseMonthParam(mes, now.getMonth() + 1);
 
   const { start, end } = getMonthBounds(selectedYear, selectedMonth);
   const activityCount = await prisma.activity.count({
@@ -69,10 +70,10 @@ export default async function ReportesPage({
 
       <FadeIn delay={0.05}>
         <form
-          className="flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card"
+          className="grid grid-cols-2 items-end gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card sm:flex sm:flex-wrap"
           method="get"
         >
-          <span className="mr-auto flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <span className="col-span-2 flex items-center gap-2 text-sm font-semibold text-slate-700 sm:col-span-1 sm:mr-auto">
             <CalendarIcon className="text-base text-brand-600" />
             Período del reporte
           </span>
@@ -90,11 +91,15 @@ export default async function ReportesPage({
               id="anio"
               type="number"
               name="anio"
+              min={2000}
+              max={2100}
               defaultValue={selectedYear}
-              className="w-24"
+              className="w-full sm:w-24"
             />
           </Field>
-          <Button variant="outline">Ver mes</Button>
+          <Button variant="outline" className="col-span-2 sm:col-span-1">
+            Ver mes
+          </Button>
         </form>
       </FadeIn>
 
