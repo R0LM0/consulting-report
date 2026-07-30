@@ -1,6 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { getCurrentUserId } from "@/lib/auth-user";
+import { signOutAction } from "@/lib/auth-actions";
 import { prisma } from "@/lib/prisma";
 import {
   MESES_ES,
@@ -9,16 +10,24 @@ import {
   getMonthBounds,
   parseIntOrDefault,
 } from "@/lib/months";
+import { AppShell, PageHeader } from "@/components/app-shell";
 import { createActivity } from "./actions";
-import { ActivityItem } from "./activity-item";
+import { ActivityList } from "./activity-list";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader } from "@/components/ui/card";
+import { FadeIn } from "@/components/ui/fade-in";
+import { Field, Input, Select } from "@/components/ui/input";
+import { CalendarIcon, PlusIcon } from "@/components/icons";
 
 export default async function ActividadesPage({
   searchParams,
 }: {
   searchParams: Promise<{ anio?: string; mes?: string }>;
 }) {
+  const session = await auth();
   const userId = await getCurrentUserId();
-  if (!userId) {
+  if (!session?.user || !userId) {
     redirect("/login");
   }
 
@@ -35,130 +44,98 @@ export default async function ActividadesPage({
   });
 
   const todayInputValue = formatDateInputValue(now);
+  const mesNombre = MESES_ES[selectedMonth - 1];
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-8 px-4 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900">
-          Registro de actividades
-        </h1>
-        <Link href="/" className="text-sm text-gray-500 hover:text-gray-900">
-          Inicio
-        </Link>
-      </div>
+    <AppShell user={session.user} signOutAction={signOutAction}>
+      <PageHeader
+        title="Registro de actividades"
+        subtitle="Anota lo que haces cada día; al cierre del mes se genera tu informe."
+        action={
+          <Badge tone="brand" className="px-3 py-1 text-sm">
+            {activities.length} en {mesNombre} {selectedYear}
+          </Badge>
+        }
+      />
 
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-sm font-medium text-gray-700">
-          Registrar actividad
-        </h2>
-        <form
-          action={createActivity}
-          className="flex flex-col gap-3 sm:flex-row sm:items-end"
-        >
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="date"
-              className="text-xs font-medium text-gray-500"
-            >
-              Fecha
-            </label>
-            <input
-              id="date"
-              type="date"
-              name="date"
-              defaultValue={todayInputValue}
-              required
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
-            />
-          </div>
-          <div className="flex flex-1 flex-col gap-1">
-            <label
-              htmlFor="description"
-              className="text-xs font-medium text-gray-500"
-            >
-              Qué hiciste
-            </label>
-            <input
-              id="description"
-              type="text"
-              name="description"
-              placeholder="Ej: Ajuste al módulo de reportes del SIGIL"
-              required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
-            />
-          </div>
-          <button
-            type="submit"
-            className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+      <FadeIn delay={0.05}>
+        <Card>
+          <CardHeader
+            title="Registrar actividad"
+            description="Fecha y descripción de lo que hiciste"
+            icon={<PlusIcon />}
+          />
+          <form
+            action={createActivity}
+            className="flex flex-col gap-3 sm:flex-row sm:items-end"
           >
-            Agregar
-          </button>
-        </form>
-      </section>
+            <Field label="Fecha" htmlFor="date">
+              <Input
+                id="date"
+                type="date"
+                name="date"
+                defaultValue={todayInputValue}
+                required
+              />
+            </Field>
+            <Field label="Qué hiciste" htmlFor="description" className="flex-1">
+              <Input
+                id="description"
+                type="text"
+                name="description"
+                placeholder="Ej: Ajuste al módulo de reportes del SIGIL"
+                required
+                className="w-full"
+              />
+            </Field>
+            <Button className="sm:shrink-0">
+              <PlusIcon />
+              Agregar
+            </Button>
+          </form>
+        </Card>
+      </FadeIn>
 
-      <section className="flex flex-col gap-4">
-        <form className="flex flex-wrap items-end gap-3" method="get">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="mes" className="text-xs font-medium text-gray-500">
-              Mes
-            </label>
-            <select
-              id="mes"
-              name="mes"
-              defaultValue={String(selectedMonth)}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
-            >
+      <FadeIn delay={0.15} className="flex flex-col gap-4">
+        <form
+          className="flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card"
+          method="get"
+        >
+          <span className="mr-auto flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <CalendarIcon className="text-base text-brand-600" />
+            Filtrar por mes
+          </span>
+          <Field label="Mes" htmlFor="mes">
+            <Select id="mes" name="mes" defaultValue={String(selectedMonth)}>
               {MESES_ES.map((nombre, index) => (
                 <option key={nombre} value={index + 1}>
                   {nombre}
                 </option>
               ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="anio"
-              className="text-xs font-medium text-gray-500"
-            >
-              Año
-            </label>
-            <input
+            </Select>
+          </Field>
+          <Field label="Año" htmlFor="anio">
+            <Input
               id="anio"
               type="number"
               name="anio"
               defaultValue={selectedYear}
-              className="w-24 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
+              className="w-24"
             />
-          </div>
-          <button
-            type="submit"
-            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-          >
-            Ver mes
-          </button>
+          </Field>
+          <Button variant="outline">Ver mes</Button>
         </form>
 
-        <div className="flex flex-col gap-2">
-          {activities.length === 0 ? (
-            <p className="text-sm text-gray-500">
-              No hay actividades registradas para {MESES_ES[selectedMonth - 1]}{" "}
-              de {selectedYear}.
-            </p>
-          ) : (
-            activities.map((activity) => (
-              <ActivityItem
-                key={activity.id}
-                activity={{
-                  id: activity.id,
-                  dateInputValue: formatDateInputValue(activity.date),
-                  dateDisplay: formatDateDisplay(activity.date),
-                  description: activity.description,
-                }}
-              />
-            ))
-          )}
-        </div>
-      </section>
-    </div>
+        <ActivityList
+          activities={activities.map((activity) => ({
+            id: activity.id,
+            dateInputValue: formatDateInputValue(activity.date),
+            dateDisplay: formatDateDisplay(activity.date),
+            description: activity.description,
+          }))}
+          emptyMessage={`No hay actividades registradas para ${mesNombre} de ${selectedYear}.`}
+        />
+      </FadeIn>
+    </AppShell>
   );
 }

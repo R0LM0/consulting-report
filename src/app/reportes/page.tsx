@@ -1,6 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { getCurrentUserId } from "@/lib/auth-user";
+import { signOutAction } from "@/lib/auth-actions";
 import { prisma } from "@/lib/prisma";
 import {
   MESES_ES,
@@ -9,14 +10,27 @@ import {
   getMonthBounds,
   parseIntOrDefault,
 } from "@/lib/months";
+import { AppShell, PageHeader } from "@/components/app-shell";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader } from "@/components/ui/card";
+import { FadeIn } from "@/components/ui/fade-in";
+import { Field, Input, Select } from "@/components/ui/input";
+import {
+  CalendarIcon,
+  DownloadIcon,
+  FileTextIcon,
+  ReceiptIcon,
+} from "@/components/icons";
 
 export default async function ReportesPage({
   searchParams,
 }: {
   searchParams: Promise<{ anio?: string; mes?: string }>;
 }) {
+  const session = await auth();
   const userId = await getCurrentUserId();
-  if (!userId) {
+  if (!session?.user || !userId) {
     redirect("/login");
   }
 
@@ -36,155 +50,144 @@ export default async function ReportesPage({
   );
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-8 px-4 py-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900">
-          Generar reportes mensuales
-        </h1>
-        <Link href="/" className="text-sm text-gray-500 hover:text-gray-900">
-          Inicio
-        </Link>
-      </div>
+    <AppShell user={session.user} signOutAction={signOutAction}>
+      <PageHeader
+        title="Generar reportes mensuales"
+        subtitle="Descarga tu informe de actividades (.docx) y tu recibo (.xlsx)."
+        action={
+          activityCount > 0 ? (
+            <Badge tone="success" className="px-3 py-1 text-sm">
+              {activityCount} actividad(es) en {mesNombre}
+            </Badge>
+          ) : (
+            <Badge tone="warning" className="px-3 py-1 text-sm">
+              Sin actividades en {mesNombre}
+            </Badge>
+          )
+        }
+      />
 
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <form className="flex flex-wrap items-end gap-3" method="get">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="mes" className="text-xs font-medium text-gray-500">
-              Mes
-            </label>
-            <select
-              id="mes"
-              name="mes"
-              defaultValue={String(selectedMonth)}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
-            >
+      <FadeIn delay={0.05}>
+        <form
+          className="flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card"
+          method="get"
+        >
+          <span className="mr-auto flex items-center gap-2 text-sm font-semibold text-slate-700">
+            <CalendarIcon className="text-base text-brand-600" />
+            Período del reporte
+          </span>
+          <Field label="Mes" htmlFor="mes">
+            <Select id="mes" name="mes" defaultValue={String(selectedMonth)}>
               {MESES_ES.map((nombre, index) => (
                 <option key={nombre} value={index + 1}>
                   {nombre}
                 </option>
               ))}
-            </select>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="anio"
-              className="text-xs font-medium text-gray-500"
-            >
-              Año
-            </label>
-            <input
+            </Select>
+          </Field>
+          <Field label="Año" htmlFor="anio">
+            <Input
               id="anio"
               type="number"
               name="anio"
               defaultValue={selectedYear}
-              className="w-24 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
+              className="w-24"
             />
+          </Field>
+          <Button variant="outline">Ver mes</Button>
+        </form>
+      </FadeIn>
+
+      {activityCount === 0 ? (
+        <FadeIn delay={0.1}>
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            No hay actividades registradas para {mesNombre} de {selectedYear}.
+            Revisa <span className="font-semibold">Actividades</span> antes de
+            generar el informe.
           </div>
-          <button
-            type="submit"
-            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-          >
-            Ver mes
-          </button>
-        </form>
+        </FadeIn>
+      ) : null}
 
-        <p
-          className={`mt-4 text-sm ${
-            activityCount === 0 ? "text-red-600" : "text-gray-600"
-          }`}
-        >
-          {activityCount === 0
-            ? `No hay actividades registradas para ${mesNombre} de ${selectedYear}. Revisa /actividades antes de generar el informe.`
-            : `${activityCount} actividad(es) registradas para ${mesNombre} de ${selectedYear}.`}
-        </p>
-      </section>
+      <div className="grid gap-4 md:grid-cols-2">
+        <FadeIn delay={0.15}>
+          <Card className="flex h-full flex-col transition-shadow hover:shadow-card-hover">
+            <CardHeader
+              title="Informe de Actividades"
+              description="Documento Word con el membrete oficial y la numeración automática"
+              icon={<FileTextIcon />}
+            />
+            <div className="mb-5 flex-1 rounded-xl bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-500">
+              Incluye las {activityCount} actividad(es) de {mesNombre}{" "}
+              {selectedYear} en el formato institucional, listo para firmar y
+              entregar.
+            </div>
+            <form action="/api/reportes/informe" method="get">
+              <input type="hidden" name="anio" value={selectedYear} />
+              <input type="hidden" name="mes" value={selectedMonth} />
+              <Button className="w-full">
+                <DownloadIcon />
+                Descargar informe .docx
+              </Button>
+            </form>
+          </Card>
+        </FadeIn>
 
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-sm font-medium text-gray-700">
-          Informe de Actividades (.docx)
-        </h2>
-        <form action="/api/reportes/informe" method="get">
-          <input type="hidden" name="anio" value={selectedYear} />
-          <input type="hidden" name="mes" value={selectedMonth} />
-          <button
-            type="submit"
-            className="w-full rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
-          >
-            Descargar informe de {mesNombre} {selectedYear}
-          </button>
-        </form>
-      </section>
-
-      <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-sm font-medium text-gray-700">
-          Recibo (.xlsx)
-        </h2>
-        <form
-          action="/api/reportes/recibo"
-          method="get"
-          className="flex flex-col gap-3"
-        >
-          <input type="hidden" name="anio" value={selectedYear} />
-          <input type="hidden" name="mes" value={selectedMonth} />
-          <div className="flex flex-wrap gap-3">
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="numero"
-                className="text-xs font-medium text-gray-500"
-              >
-                Número de recibo
-              </label>
-              <input
-                id="numero"
-                type="number"
-                name="numero"
-                placeholder="25"
-                required
-                className="w-28 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="montoSubtotal"
-                className="text-xs font-medium text-gray-500"
-              >
-                Subtotal (USD)
-              </label>
-              <input
-                id="montoSubtotal"
-                type="number"
-                name="montoSubtotal"
-                step="0.01"
-                placeholder="1200"
-                required
-                className="w-32 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label
-                htmlFor="fecha"
-                className="text-xs font-medium text-gray-500"
-              >
-                Fecha del recibo
-              </label>
-              <input
-                id="fecha"
-                type="date"
-                name="fecha"
-                defaultValue={defaultFecha}
-                required
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
-              />
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="w-full rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100"
-          >
-            Descargar recibo de {mesNombre} {selectedYear}
-          </button>
-        </form>
-      </section>
-    </div>
+        <FadeIn delay={0.25}>
+          <Card className="flex h-full flex-col transition-shadow hover:shadow-card-hover">
+            <CardHeader
+              title="Recibo"
+              description="Hoja de Excel con número de recibo, monto y fecha"
+              icon={<ReceiptIcon />}
+            />
+            <form
+              action="/api/reportes/recibo"
+              method="get"
+              className="flex flex-1 flex-col gap-3"
+            >
+              <input type="hidden" name="anio" value={selectedYear} />
+              <input type="hidden" name="mes" value={selectedMonth} />
+              <div className="grid flex-1 grid-cols-2 gap-3">
+                <Field label="Número de recibo" htmlFor="numero">
+                  <Input
+                    id="numero"
+                    type="number"
+                    name="numero"
+                    placeholder="25"
+                    required
+                  />
+                </Field>
+                <Field label="Subtotal (USD)" htmlFor="montoSubtotal">
+                  <Input
+                    id="montoSubtotal"
+                    type="number"
+                    name="montoSubtotal"
+                    step="0.01"
+                    placeholder="1200"
+                    required
+                  />
+                </Field>
+                <Field
+                  label="Fecha del recibo"
+                  htmlFor="fecha"
+                  className="col-span-2"
+                >
+                  <Input
+                    id="fecha"
+                    type="date"
+                    name="fecha"
+                    defaultValue={defaultFecha}
+                    required
+                  />
+                </Field>
+              </div>
+              <Button variant="secondary" className="w-full">
+                <DownloadIcon />
+                Descargar recibo .xlsx
+              </Button>
+            </form>
+          </Card>
+        </FadeIn>
+      </div>
+    </AppShell>
   );
 }
