@@ -160,9 +160,9 @@ export function AppShell({
   const userEmail = user.email ?? "";
 
   return (
-    <div className="min-h-screen bg-[#050505] text-slate-300">
+    <div className="min-h-screen bg-[#0a0e14] text-slate-300">
       {/* Sidebar desktop */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col gap-8 overflow-hidden border-r border-white/10 bg-[#050505] px-4 py-6 lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col gap-8 overflow-hidden border-r border-white/10 bg-[#070a0f] px-4 py-6 lg:flex">
         <AsciiField className="absolute bottom-24 left-3 text-[10px]" />
         <Brand />
         <NavLinks pathname={pathname} />
@@ -176,7 +176,7 @@ export function AppShell({
       </aside>
 
       {/* Topbar móvil */}
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-white/10 bg-[#050505]/85 px-4 py-3 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-white/10 bg-[#0a0e14]/85 px-4 py-3 backdrop-blur lg:hidden">
         <span className="flex items-center gap-2.5">
           <Logo className="h-8 w-8" />
           <span className="font-mono text-sm font-bold tracking-[0.12em] text-white">
@@ -209,7 +209,7 @@ export function AppShell({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 360, damping: 36 }}
-              className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col gap-8 overflow-hidden border-r border-white/10 bg-[#050505] px-4 py-6 lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col gap-8 overflow-hidden border-r border-white/10 bg-[#070a0f] px-4 py-6 lg:hidden"
             >
               <AsciiField className="absolute bottom-24 left-3 text-[10px]" />
               <div className="flex items-center justify-between">
