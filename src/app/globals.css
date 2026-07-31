@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f6fb;
-  --foreground: #0f172a;
+  --background: #050505;
+  --foreground: #e2e8f0;
 }
 
 @theme inline {
@@ -26,8 +26,8 @@
   --color-brand-900: #18428c;
   --color-brand-950: #122a55;
 
-  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 16px -2px rgb(15 23 42 / 0.08);
-  --shadow-card-hover: 0 2px 4px rgb(15 23 42 / 0.05), 0 12px 32px -4px rgb(20 93 218 / 0.18);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px -2px rgb(0 0 0 / 0.4);
+  --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.35), 0 12px 32px -4px rgb(27 118 237 / 0.22);
 
   --animate-fade-in: fade-in 0.4s ease-out both;
 
@@ -46,9 +46,74 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  color-scheme: dark;
 }
 
 ::selection {
   background: var(--color-brand-200);
   color: var(--color-brand-950);
+}
+
+/* ===== Tema oscuro ASCII — mismo mundo que el login ===== */
+
+/* Tarjetas: la clase .shadow-card marca las superficies de la app */
+.shadow-card,
+.shadow-card-hover {
+  background: rgb(255 255 255 / 0.03) !important;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 6px;
+  box-shadow: none !important;
+}
+
+/* Textos sobre fondo oscuro */
+.text-slate-900 {
+  color: #f1f5f9 !important;
+}
+.text-slate-700,
+.text-slate-600 {
+  color: #cbd5e1 !important;
+}
+.text-slate-500 {
+  color: #94a3b8 !important;
+}
+.text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Superficies claras suaves -> paneles dark */
+.bg-white {
+  background-color: rgb(255 255 255 / 0.03) !important;
+}
+.bg-slate-50 {
+  background-color: rgb(255 255 255 / 0.02) !important;
+}
+.bg-slate-100 {
+  background-color: rgb(255 255 255 / 0.06) !important;
+}
+
+/* Bordes claros -> bordes dark */
+.border-slate-200,
+.border-slate-200\/70,
+.border-slate-100 {
+  border-color: rgb(255 255 255 / 0.1) !important;
+}
+.ring-slate-200,
+.ring-slate-100 {
+  --tw-ring-color: rgb(255 255 255 / 0.1) !important;
+}
+
+/* Inputs y selects */
+input,
+textarea,
+select {
+  color-scheme: dark;
+}
+
+/* Focus coherente con la marca */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--color-brand-400) !important;
+  box-shadow: 0 0 0 3px rgb(89 181 252 / 0.16);
 }
