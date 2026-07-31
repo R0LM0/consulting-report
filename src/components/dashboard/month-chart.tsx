@@ -47,7 +47,7 @@ export function MonthChart({ data }: { data: MonthDatum[] }) {
             }`}
           />
           <span
-            className={`text-[10px] font-medium uppercase tracking-wide ${
+            className={`font-mono text-[10px] font-medium uppercase tracking-wide ${
               d.current ? "text-brand-700" : "text-slate-400"
             }`}
           >

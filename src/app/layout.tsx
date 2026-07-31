@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ENACAL · Reportes",
+  title: "r0lm0.dev · Reportes",
   description:
     "Registro de actividades y generación de informes mensuales y recibos.",
 };

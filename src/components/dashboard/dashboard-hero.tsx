@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { SparklesIcon } from "@/components/icons";
+import { AsciiDroplet } from "@/components/ascii-droplet";
 
 export function DashboardHero({
   name,
@@ -48,10 +49,20 @@ export function DashboardHero({
         data-hero="glow"
         className="pointer-events-none absolute -bottom-20 right-24 h-48 w-48 rounded-full bg-cyan-300/20 blur-3xl"
       />
+      <AsciiDroplet
+        animated={false}
+        className="pointer-events-none absolute -right-2 top-1/2 hidden -translate-y-1/2 text-[8px] text-white/10 md:block"
+      />
       <div className="relative">
+        <p
+          data-hero="badge"
+          className="font-mono text-[11px] text-brand-200/80"
+        >
+          {"// resumen mensual"}
+        </p>
         <span
           data-hero="badge"
-          className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-brand-100 ring-1 ring-white/20"
+          className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-brand-100 ring-1 ring-white/20"
         >
           <SparklesIcon />
           {monthName} {year}

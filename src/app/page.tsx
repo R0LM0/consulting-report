@@ -47,7 +47,7 @@ function KpiCard({
         </span>
       </div>
       <div>
-        <p className="text-3xl font-bold tracking-tight text-slate-900">
+        <p className="font-mono text-3xl font-bold tracking-tight text-slate-900">
           <CountUp value={value} />
         </p>
         <p className="mt-0.5 text-xs font-medium text-slate-500">

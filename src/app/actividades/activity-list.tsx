@@ -39,7 +39,7 @@ export function ActivityList({
       {groups.map((group) => (
         <section key={group.key} className="flex flex-col gap-2">
           <div className="flex items-center gap-2 px-1">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500">
               {group.label}
             </h2>
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-slate-500">

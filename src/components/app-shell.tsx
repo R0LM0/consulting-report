@@ -40,11 +40,11 @@ function Brand() {
         <DropletIcon />
       </span>
       <span className="flex flex-col leading-tight">
-        <span className="text-sm font-bold tracking-tight text-white">
-          ENACAL
+        <span className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-white">
+          R0LM0.DEV
         </span>
-        <span className="text-[11px] font-medium text-brand-300">
-          Reportes mensuales
+        <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-brand-300">
+          reportes·mensuales
         </span>
       </span>
     </Link>
@@ -61,7 +61,7 @@ function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
             key={item.href}
             href={item.href}
             onClick={onNavigate}
-            className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+            className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.18em] transition-colors ${
               active ? "text-white" : "text-brand-200/70 hover:text-white"
             }`}
           >
@@ -165,7 +165,7 @@ export function AppShell({
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-base text-white">
             <DropletIcon />
           </span>
-          <span className="text-sm font-bold text-slate-900">ENACAL</span>
+          <span className="text-sm font-bold text-slate-900">R0LM0.DEV</span>
         </span>
         <button
           type="button"
