@@ -26,7 +26,7 @@ export function MonthHeatmap({
         {WEEKDAYS.map((d, i) => (
           <span
             key={`${d}-${i}`}
-            className="pb-1 text-center text-[10px] font-semibold uppercase text-slate-400"
+            className="pb-1 text-center text-[10px] font-semibold uppercase text-slate-500"
           >
             {d}
           </span>
@@ -54,9 +54,9 @@ export function MonthHeatmap({
                 hasActivity
                   ? "bg-brand-600 text-white shadow-sm shadow-brand-600/30"
                   : isFuture
-                    ? "text-slate-300"
-                    : "bg-slate-100 text-slate-500"
-              } ${isToday ? "ring-2 ring-brand-400 ring-offset-1" : ""}`}
+                    ? "text-slate-600"
+                    : "bg-white/[0.05] text-slate-400"
+              } ${isToday ? "ring-2 ring-brand-400 ring-offset-1 ring-offset-[#111722]" : ""}`}
             >
               {day}
             </motion.span>
@@ -66,14 +66,14 @@ export function MonthHeatmap({
 
       <div className="mt-auto pt-5">
         <div className="mb-1.5 flex items-baseline justify-between text-xs">
-          <span className="font-medium text-slate-600">
+          <span className="font-medium text-slate-400">
             Cobertura del mes
           </span>
-          <span className="font-semibold tabular-nums text-slate-900">
+          <span className="font-semibold tabular-nums text-slate-100">
             {activeDays.length} de {todayDay} días
           </span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+        <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${Math.round(coverage * 100)}%` }}

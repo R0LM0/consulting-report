@@ -29,9 +29,9 @@ export function ReportesFilter({
   }
 
   return (
-    <div className="grid grid-cols-2 items-end gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card sm:flex sm:flex-wrap">
-      <span className="col-span-2 flex items-center gap-2 text-sm font-semibold text-slate-700 sm:col-span-1 sm:mr-auto">
-        <CalendarIcon className="text-base text-brand-600" />
+    <div className="grid grid-cols-2 items-end gap-3 rounded-2xl border border-white/[0.07] bg-[#111722] p-4 shadow-card sm:flex sm:flex-wrap">
+      <span className="col-span-2 flex items-center gap-2 text-sm font-semibold text-slate-200 sm:col-span-1 sm:mr-auto">
+        <CalendarIcon className="text-base text-brand-400" />
         Período del reporte
       </span>
       <Field label="Mes" htmlFor="mes">

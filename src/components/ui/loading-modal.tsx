@@ -31,12 +31,12 @@ export function LoadingModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 8 }}
             transition={{ type: "spring", stiffness: 380, damping: 30 }}
-            className="flex w-full max-w-xs flex-col items-center gap-4 rounded-2xl bg-white p-8 text-center shadow-2xl"
+            className="flex w-full max-w-xs flex-col items-center gap-4 rounded-2xl border border-white/10 bg-[#111722] p-8 text-center shadow-2xl"
           >
-            <span className="h-10 w-10 animate-spin rounded-full border-[3px] border-brand-200 border-t-brand-600" />
+            <span className="h-10 w-10 animate-spin rounded-full border-[3px] border-brand-500/20 border-t-brand-400" />
             <div>
-              <p className="text-sm font-semibold text-slate-900">{title}</p>
-              <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+              <p className="text-sm font-semibold text-slate-100">{title}</p>
+              <p className="mt-1 text-xs text-slate-400">{subtitle}</p>
             </div>
           </motion.div>
         </motion.div>

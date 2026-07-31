@@ -7,13 +7,13 @@ import { useState, type ReactNode } from "react";
 import {
   ClipboardIcon,
   DashboardIcon,
-  DropletIcon,
   FileTextIcon,
   LogOutIcon,
   MenuIcon,
   SettingsIcon,
   XIcon,
 } from "@/components/icons";
+import { Logo } from "@/components/logo";
 
 interface NavItem {
   href: string;
@@ -23,11 +23,33 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/", label: "Panel", icon: <DashboardIcon className="text-lg" />, exact: true },
-  { href: "/actividades", label: "Actividades", icon: <ClipboardIcon className="text-lg" /> },
-  { href: "/reportes", label: "Reportes", icon: <FileTextIcon className="text-lg" /> },
-  { href: "/perfil", label: "Ajustes", icon: <SettingsIcon className="text-lg" /> },
+  { href: "/", label: "panel", icon: <DashboardIcon className="text-lg" />, exact: true },
+  { href: "/actividades", label: "actividades", icon: <ClipboardIcon className="text-lg" /> },
+  { href: "/reportes", label: "reportes", icon: <FileTextIcon className="text-lg" /> },
+  { href: "/perfil", label: "ajustes", icon: <SettingsIcon className="text-lg" /> },
 ];
+
+/** Campo de caracteres ASCII tenue, mismo lenguaje que el login */
+function AsciiField({ className = "" }: { className?: string }) {
+  return (
+    <pre
+      aria-hidden
+      className={`pointer-events-none select-none overflow-hidden font-mono leading-[1.35] tracking-[0.35em] text-brand-400/[0.07] ${className}`}
+    >
+      {Array.from({ length: 14 })
+        .map((_, r) =>
+          Array.from({ length: 16 })
+            .map((_, c) => {
+              const set = "·:.-+**=";
+              const idx = (r * 7 + c * 13 + ((r * c) % 5)) % set.length;
+              return set[idx];
+            })
+            .join(" ")
+        )
+        .join("\n")}
+    </pre>
+  );
+}
 
 function isActive(pathname: string, item: NavItem): boolean {
   return item.exact ? pathname === item.href : pathname.startsWith(item.href);
@@ -35,16 +57,14 @@ function isActive(pathname: string, item: NavItem): boolean {
 
 function Brand() {
   return (
-    <Link href="/" className="flex items-center gap-3 px-2">
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-xl text-white shadow-md shadow-brand-600/30">
-        <DropletIcon />
-      </span>
+    <Link href="/" className="relative z-10 flex items-center gap-3 px-2">
+      <Logo className="h-9 w-9" />
       <span className="flex flex-col leading-tight">
-        <span className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-white">
-          R0LM0.DEV
+        <span className="font-mono text-sm font-bold tracking-[0.2em] text-white">
+          r0lm0<span className="text-brand-400">.</span>dev
         </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-brand-300">
-          reportes·mensuales
+        <span className="font-mono text-[10px] tracking-[0.15em] text-brand-400/70">
+          {"// reportes·mensuales"}
         </span>
       </span>
     </Link>
@@ -53,7 +73,7 @@ function Brand() {
 
 function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
   return (
-    <nav className="flex flex-col gap-1">
+    <nav className="relative z-10 flex flex-col gap-1">
       {NAV_ITEMS.map((item) => {
         const active = isActive(pathname, item);
         return (
@@ -61,21 +81,16 @@ function NavLinks({ pathname, onNavigate }: { pathname: string; onNavigate?: () 
             key={item.href}
             href={item.href}
             onClick={onNavigate}
-            className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.18em] transition-colors ${
-              active ? "text-white" : "text-brand-200/70 hover:text-white"
+            className={`relative flex items-center gap-3 rounded-md px-3 py-2.5 font-mono text-[11px] font-medium tracking-[0.18em] transition-colors ${
+              active
+                ? "border border-brand-400/25 bg-brand-500/10 text-white"
+                : "border border-transparent text-slate-500 hover:bg-white/[0.04] hover:text-slate-200"
             }`}
           >
-            {active ? (
-              <motion.span
-                layoutId="nav-active-pill"
-                transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                className="absolute inset-0 rounded-xl bg-white/10 ring-1 ring-white/15"
-              />
-            ) : null}
-            <span className="relative z-10 flex items-center gap-3">
-              {item.icon}
-              {item.label}
+            <span className={active ? "text-brand-400" : "text-slate-600"}>
+              {active ? ">" : item.icon}
             </span>
+            {item.label}
           </Link>
         );
       })}
@@ -101,13 +116,13 @@ function UserBlock({
     .toUpperCase();
 
   return (
-    <div className="flex items-center gap-3 rounded-xl bg-white/5 p-3 ring-1 ring-white/10">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-500/30 text-xs font-bold text-brand-100 ring-1 ring-brand-400/40">
+    <div className="relative z-10 flex items-center gap-3 rounded-md border border-white/10 bg-white/[0.03] p-3">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-brand-400/30 bg-brand-500/15 font-mono text-xs font-bold text-brand-300">
         {initials || "?"}
       </span>
       <div className="min-w-0 flex-1 leading-tight">
-        <p className="truncate text-xs font-semibold text-white">{userName}</p>
-        <p className="truncate text-[11px] text-brand-300/80">{userEmail}</p>
+        <p className="truncate text-xs font-semibold text-slate-200">{userName}</p>
+        <p className="truncate font-mono text-[11px] text-slate-500">{userEmail}</p>
       </div>
       <form action={signOutAction}>
         <motion.button
@@ -115,7 +130,7 @@ function UserBlock({
           title="Cerrar sesión"
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
-          className="cursor-pointer rounded-lg p-2 text-brand-200/70 transition-colors hover:bg-white/10 hover:text-white"
+          className="cursor-pointer rounded-md p-2 text-slate-500 transition-colors hover:bg-white/[0.06] hover:text-white"
         >
           <LogOutIcon className="text-base" />
         </motion.button>
@@ -145,9 +160,10 @@ export function AppShell({
   const userEmail = user.email ?? "";
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#0a0e14] text-slate-300">
       {/* Sidebar desktop */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col gap-8 bg-brand-950 px-4 py-6 lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col gap-8 overflow-hidden border-r border-white/10 bg-[#070a0f] px-4 py-6 lg:flex">
+        <AsciiField className="absolute bottom-24 left-3 text-[10px]" />
         <Brand />
         <NavLinks pathname={pathname} />
         <div className="mt-auto">
@@ -160,18 +176,18 @@ export function AppShell({
       </aside>
 
       {/* Topbar móvil */}
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200/70 bg-white/80 px-4 py-3 backdrop-blur lg:hidden">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-white/10 bg-[#0a0e14]/85 px-4 py-3 backdrop-blur lg:hidden">
         <span className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-base text-white">
-            <DropletIcon />
+          <Logo className="h-8 w-8" />
+          <span className="font-mono text-sm font-bold tracking-[0.12em] text-white">
+            r0lm0<span className="text-brand-400">.</span>dev
           </span>
-          <span className="text-sm font-bold text-slate-900">R0LM0.DEV</span>
         </span>
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
           aria-label="Abrir menú"
-          className="cursor-pointer rounded-lg p-2 text-slate-600 hover:bg-slate-100"
+          className="cursor-pointer rounded-md p-2 text-slate-400 hover:bg-white/[0.06]"
         >
           <MenuIcon className="text-xl" />
         </button>
@@ -186,22 +202,23 @@ export function AppShell({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-40 bg-slate-950/50 lg:hidden"
+              className="fixed inset-0 z-40 bg-black/70 lg:hidden"
             />
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 360, damping: 36 }}
-              className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col gap-8 bg-brand-950 px-4 py-6 lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col gap-8 overflow-hidden border-r border-white/10 bg-[#070a0f] px-4 py-6 lg:hidden"
             >
+              <AsciiField className="absolute bottom-24 left-3 text-[10px]" />
               <div className="flex items-center justify-between">
                 <Brand />
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
                   aria-label="Cerrar menú"
-                  className="cursor-pointer rounded-lg p-2 text-brand-200 hover:bg-white/10"
+                  className="cursor-pointer rounded-md p-2 text-slate-400 hover:bg-white/[0.06]"
                 >
                   <XIcon className="text-lg" />
                 </button>
@@ -247,7 +264,7 @@ export function PageHeader({
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-100">
           {title}
         </h1>
         {subtitle ? (

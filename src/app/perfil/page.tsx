@@ -136,14 +136,14 @@ export default async function PerfilPage() {
           />
           <dl className="flex flex-col gap-2 text-sm">
             <div className="flex items-center justify-between gap-4">
-              <dt className="text-slate-500">Nombre</dt>
-              <dd className="font-medium text-slate-900">
+              <dt className="text-slate-400">Nombre</dt>
+              <dd className="font-medium text-slate-100">
                 {session.user.name}
               </dd>
             </div>
             <div className="flex items-center justify-between gap-4">
-              <dt className="text-slate-500">Correo</dt>
-              <dd className="font-medium text-slate-900">
+              <dt className="text-slate-400">Correo</dt>
+              <dd className="font-medium text-slate-100">
                 {session.user.email}
               </dd>
             </div>

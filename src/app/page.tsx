@@ -42,12 +42,12 @@ function KpiCard({
   return (
     <Card className="flex flex-col gap-3 p-5">
       <div className="flex items-center justify-between">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-lg text-brand-600">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-500/10 text-lg text-brand-400">
           {icon}
         </span>
       </div>
       <div>
-        <p className="font-mono text-3xl font-bold tracking-tight text-slate-900">
+        <p className="font-mono text-3xl font-bold tracking-tight text-slate-100">
           <CountUp value={value} />
         </p>
         <p className="mt-0.5 text-xs font-medium text-slate-500">
@@ -180,13 +180,13 @@ export default async function Home() {
             <div className="flex flex-1 flex-col gap-2.5">
               <Link
                 href="/actividades"
-                className="group flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 transition-all hover:border-brand-300 hover:bg-brand-50/60"
+                className="group flex items-center gap-3 rounded-xl border border-white/[0.07] px-4 py-3 transition-all hover:border-brand-400/40 hover:bg-brand-500/[0.06]"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white transition-transform group-hover:scale-110">
                   <PlusIcon />
                 </span>
                 <span className="flex-1">
-                  <span className="block text-sm font-semibold text-slate-900">
+                  <span className="block text-sm font-semibold text-slate-100">
                     Registrar actividad
                   </span>
                   <span className="block text-xs text-slate-500">
@@ -196,13 +196,13 @@ export default async function Home() {
               </Link>
               <a
                 href={`/api/reportes/informe?anio=${year}&mes=${month}`}
-                className="group flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 transition-all hover:border-brand-300 hover:bg-brand-50/60"
+                className="group flex items-center gap-3 rounded-xl border border-white/[0.07] px-4 py-3 transition-all hover:border-brand-400/40 hover:bg-brand-500/[0.06]"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 text-brand-700 transition-transform group-hover:scale-110">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/15 text-brand-300 transition-transform group-hover:scale-110">
                   <DownloadIcon />
                 </span>
                 <span className="flex-1">
-                  <span className="block text-sm font-semibold text-slate-900">
+                  <span className="block text-sm font-semibold text-slate-100">
                     Informe de {mesNombre}
                   </span>
                   <span className="block text-xs text-slate-500">
@@ -212,13 +212,13 @@ export default async function Home() {
               </a>
               <Link
                 href="/reportes"
-                className="group flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 transition-all hover:border-brand-300 hover:bg-brand-50/60"
+                className="group flex items-center gap-3 rounded-xl border border-white/[0.07] px-4 py-3 transition-all hover:border-brand-400/40 hover:bg-brand-500/[0.06]"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 transition-transform group-hover:scale-110">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-300 transition-transform group-hover:scale-110">
                   <ReceiptIcon />
                 </span>
                 <span className="flex-1">
-                  <span className="block text-sm font-semibold text-slate-900">
+                  <span className="block text-sm font-semibold text-slate-100">
                     Generar recibo
                   </span>
                   <span className="block text-xs text-slate-500">
@@ -252,7 +252,7 @@ export default async function Home() {
               action={
                 <Link
                   href="/actividades"
-                  className="text-xs font-medium text-brand-600 hover:text-brand-800"
+                  className="text-xs font-medium text-brand-400 hover:text-brand-300"
                 >
                   Ver todo →
                 </Link>
@@ -260,10 +260,10 @@ export default async function Home() {
             />
             {recent.length === 0 ? (
               <div className="flex flex-col items-center gap-2 py-8 text-center">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-xl text-brand-400">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-500/10 text-xl text-brand-400">
                   <ClipboardIcon />
                 </span>
-                <p className="text-sm font-medium text-slate-600">
+                <p className="text-sm font-medium text-slate-300">
                   Aún no registras actividades
                 </p>
                 <p className="text-xs text-slate-400">
@@ -271,14 +271,14 @@ export default async function Home() {
                 </p>
               </div>
             ) : (
-              <Stagger className="flex flex-col divide-y divide-slate-100">
+              <Stagger className="flex flex-col divide-y divide-white/[0.06]">
                 {recent.map((activity) => (
                   <StaggerItem key={activity.id}>
                     <div className="flex items-center gap-4 py-3">
                       <Badge tone="brand" className="shrink-0 tabular-nums">
                         {formatDateDisplay(activity.date)}
                       </Badge>
-                      <p className="text-sm text-slate-700">
+                      <p className="text-sm text-slate-300">
                         {activity.description}
                       </p>
                     </div>

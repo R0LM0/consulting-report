@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f6fb;
-  --foreground: #0f172a;
+  /* Fondo dark suave (no negro puro) para que el contraste no sea tan duro */
+  --background: #0a0e14;
+  /* Texto principal: blanco suave, no puro */
+  --foreground: #d8e0ec;
+  /* Superficie de tarjetas/paneles */
+  --surface: #111722;
 }
 
 @theme inline {
@@ -26,8 +30,8 @@
   --color-brand-900: #18428c;
   --color-brand-950: #122a55;
 
-  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 16px -2px rgb(15 23 42 / 0.08);
-  --shadow-card-hover: 0 2px 4px rgb(15 23 42 / 0.05), 0 12px 32px -4px rgb(20 93 218 / 0.18);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px -2px rgb(0 0 0 / 0.4);
+  --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.35), 0 12px 32px -4px rgb(27 118 237 / 0.22);
 
   --animate-fade-in: fade-in 0.4s ease-out both;
 
@@ -46,9 +50,29 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  color-scheme: dark;
 }
 
 ::selection {
   background: var(--color-brand-200);
   color: var(--color-brand-950);
+}
+
+/* ===== Tema oscuro ASCII — mismo mundo que el login =====
+   Los componentes ya nacen dark; aquí solo viven los detalles globales. */
+
+/* Inputs y selects */
+input,
+textarea,
+select {
+  color-scheme: dark;
+}
+
+/* Focus coherente con la marca */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--color-brand-400) !important;
+  box-shadow: 0 0 0 3px rgb(89 181 252 / 0.16);
 }

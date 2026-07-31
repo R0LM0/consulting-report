@@ -5,7 +5,7 @@ import type {
 } from "react";
 
 const baseFieldClasses =
-  "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 transition-shadow focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20";
+  "rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 transition-shadow focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20";
 
 export function Input({
   className = "",
@@ -55,7 +55,7 @@ export function Field({
     <div className={`flex flex-col gap-1.5 ${className}`}>
       <label
         htmlFor={htmlFor}
-        className="text-xs font-medium tracking-wide text-slate-500"
+        className="text-xs font-medium tracking-wide text-slate-400"
       >
         {label}
       </label>

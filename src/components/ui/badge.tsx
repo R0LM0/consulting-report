@@ -3,11 +3,11 @@ import type { ReactNode } from "react";
 type Tone = "brand" | "success" | "warning" | "danger" | "neutral";
 
 const toneClasses: Record<Tone, string> = {
-  brand: "bg-brand-50 text-brand-700 ring-brand-600/20",
-  success: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-  warning: "bg-amber-50 text-amber-700 ring-amber-600/25",
-  danger: "bg-red-50 text-red-700 ring-red-600/20",
-  neutral: "bg-slate-100 text-slate-600 ring-slate-500/15",
+  brand: "bg-brand-500/10 text-brand-300 ring-brand-400/25",
+  success: "bg-emerald-500/10 text-emerald-300 ring-emerald-400/25",
+  warning: "bg-amber-500/10 text-amber-300 ring-amber-400/25",
+  danger: "bg-red-500/10 text-red-300 ring-red-400/25",
+  neutral: "bg-white/[0.06] text-slate-300 ring-white/10",
 };
 
 export function Badge({

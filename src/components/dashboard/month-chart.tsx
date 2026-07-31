@@ -21,7 +21,7 @@ export function MonthChart({ data }: { data: MonthDatum[] }) {
         >
           <span
             className={`text-[11px] font-semibold tabular-nums ${
-              d.count > 0 ? "text-slate-700" : "text-slate-300"
+              d.count > 0 ? "text-slate-200" : "text-slate-600"
             }`}
           >
             {d.count > 0 ? d.count : ""}
@@ -42,13 +42,13 @@ export function MonthChart({ data }: { data: MonthDatum[] }) {
               d.current
                 ? "bg-gradient-to-t from-brand-600 to-brand-400 shadow-sm shadow-brand-500/40"
                 : d.count > 0
-                  ? "bg-brand-200"
-                  : "bg-slate-100"
+                  ? "bg-brand-500/25"
+                  : "bg-white/[0.05]"
             }`}
           />
           <span
             className={`font-mono text-[10px] font-medium uppercase tracking-wide ${
-              d.current ? "text-brand-700" : "text-slate-400"
+              d.current ? "text-brand-400" : "text-slate-500"
             }`}
           >
             {d.label.slice(0, 3)}

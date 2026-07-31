@@ -72,10 +72,10 @@ export function MonthFilter({
         : `${selectedMonths.length} meses`;
 
   return (
-    <div className="flex flex-wrap items-end justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card sm:p-5">
+    <div className="flex flex-wrap items-end justify-between gap-3 rounded-2xl border border-white/[0.07] bg-[#111722] p-4 shadow-card sm:p-5">
       <div ref={rootRef} className="relative w-full sm:w-72">
         <span className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-          <CalendarIcon className="text-sm text-brand-600" />
+          <CalendarIcon className="text-sm text-brand-400" />
           Mes
         </span>
         <button
@@ -83,7 +83,7 @@ export function MonthFilter({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-haspopup="listbox"
-          className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-900 transition-shadow focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+          className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-sm font-medium text-slate-100 transition-shadow focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-400/20"
         >
           {summary}
           <motion.span
@@ -102,9 +102,9 @@ export function MonthFilter({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -6, scale: 0.98 }}
               transition={{ duration: 0.16 }}
-              className="absolute z-20 mt-2 w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10"
+              className="absolute z-20 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-[#161d29] shadow-lg shadow-black/40"
             >
-              <div className="flex items-center justify-between border-b border-slate-100 px-3.5 py-2.5">
+              <div className="flex items-center justify-between border-b border-white/[0.07] px-3.5 py-2.5">
                 <span className="text-xs font-medium text-slate-500">
                   {selectedMonths.length} de 12 seleccionados
                 </span>
@@ -114,14 +114,14 @@ export function MonthFilter({
                     onClick={() =>
                       apply(year, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
                     }
-                    className="cursor-pointer text-xs font-semibold text-brand-600 hover:text-brand-800"
+                    className="cursor-pointer text-xs font-semibold text-brand-400 hover:text-brand-300"
                   >
                     Todos
                   </button>
                   <button
                     type="button"
                     onClick={() => apply(year, [now.getMonth() + 1])}
-                    className="cursor-pointer text-xs font-semibold text-slate-400 hover:text-slate-600"
+                    className="cursor-pointer text-xs font-semibold text-slate-400 hover:text-slate-200"
                   >
                     Limpiar
                   </button>
@@ -140,15 +140,15 @@ export function MonthFilter({
                         onClick={() => toggleMonth(month)}
                         className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-2.5 py-2 text-sm transition-colors ${
                           checked
-                            ? "bg-brand-50/70 font-medium text-slate-900"
-                            : "text-slate-600 hover:bg-slate-50"
+                            ? "bg-brand-500/10 font-medium text-slate-100"
+                            : "text-slate-300 hover:bg-white/[0.05]"
                         }`}
                       >
                         <span
                           className={`flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded border transition-colors ${
                             checked
-                              ? "border-brand-600 bg-brand-600 text-white"
-                              : "border-slate-300 bg-white"
+                              ? "border-brand-500 bg-brand-500 text-white"
+                              : "border-white/20 bg-transparent"
                           }`}
                         >
                           {checked ? <CheckIcon className="text-[11px]" /> : null}
@@ -168,17 +168,17 @@ export function MonthFilter({
         <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
           Año
         </span>
-        <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+        <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.03] p-0.5">
           <button
             type="button"
             aria-label="Año anterior"
             onClick={() => apply(Math.max(2000, year - 1), selectedMonths)}
             disabled={year <= 2000}
-            className="cursor-pointer rounded-md p-1.5 text-slate-500 transition-colors hover:bg-white hover:text-slate-900 disabled:opacity-30"
+            className="cursor-pointer rounded-md p-1.5 text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-slate-100 disabled:opacity-30"
           >
             <ChevronLeftIcon />
           </button>
-          <span className="min-w-14 text-center text-sm font-bold tabular-nums text-slate-900">
+          <span className="min-w-14 text-center text-sm font-bold tabular-nums text-slate-100">
             {year}
           </span>
           <button
@@ -186,7 +186,7 @@ export function MonthFilter({
             aria-label="Año siguiente"
             onClick={() => apply(Math.min(2100, year + 1), selectedMonths)}
             disabled={year >= 2100}
-            className="cursor-pointer rounded-md p-1.5 text-slate-500 transition-colors hover:bg-white hover:text-slate-900 disabled:opacity-30"
+            className="cursor-pointer rounded-md p-1.5 text-slate-400 transition-colors hover:bg-white/[0.06] hover:text-slate-100 disabled:opacity-30"
           >
             <ChevronRightIcon />
           </button>
