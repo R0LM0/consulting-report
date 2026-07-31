@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AsciiDroplet } from "@/components/ascii-droplet";
+import { AsciiMoonCanvas } from "@/components/ascii-moon-canvas";
+import { Logo } from "@/components/logo";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -22,11 +23,37 @@ export function LoginPanel({
   error?: string;
 }) {
   return (
-    <div className="min-h-screen bg-[#050505] font-mono text-slate-300">
+    <div className="relative min-h-screen overflow-hidden bg-[#050505] font-mono text-slate-300">
+      {/* Fondo ASCII fluido con luna (fade hacia la izquierda) */}
+      <div
+        className="absolute inset-0 opacity-85"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(100deg, transparent 0%, rgba(0,0,0,0.55) 34%, #000 58%)",
+          maskImage:
+            "linear-gradient(100deg, transparent 0%, rgba(0,0,0,0.55) 34%, #000 58%)",
+        }}
+      >
+        <AsciiMoonCanvas />
+      </div>
+
+      {/* Guiño a la luna — moonshot.ai / Kimi K3 */}
+      <a
+        href="https://www.moonshot.ai/"
+        target="_blank"
+        rel="noreferrer"
+        className="absolute right-6 top-24 z-20 hidden text-[10px] tracking-[0.18em] text-slate-500/80 transition-colors hover:text-brand-400 lg:right-[13%] lg:block"
+      >
+        {"// la luna va por ti, kimi k3 — moonshot.ai ↗"}
+      </a>
+
       {/* Nav superior */}
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
-        <span className="text-xs font-bold uppercase tracking-[0.25em] text-white">
-          R0LM0<span className="text-brand-400">.</span>DEV
+      <header className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
+        <span className="flex items-center gap-3">
+          <Logo className="h-7 w-7" />
+          <span className="text-xs font-bold tracking-[0.28em] text-white">
+            r0lm0<span className="text-brand-400">.</span>dev
+          </span>
         </span>
         <nav className="hidden gap-6 text-[10px] uppercase tracking-[0.2em] text-slate-500 sm:flex">
           <span>Registro</span>
@@ -35,7 +62,7 @@ export function LoginPanel({
         </nav>
       </header>
 
-      <main className="mx-auto grid w-full max-w-6xl items-center gap-10 px-6 pb-16 pt-6 lg:min-h-[calc(100vh-4.5rem)] lg:grid-cols-2 lg:gap-14 lg:pt-0">
+      <main className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 px-6 pb-16 pt-6 lg:min-h-[calc(100vh-4.5rem)] lg:grid-cols-2 lg:gap-14 lg:pt-0">
         {/* Hero izquierdo */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -81,24 +108,15 @@ export function LoginPanel({
           </p>
         </motion.div>
 
-        {/* Columna derecha: arte ASCII + formulario */}
+        {/* Columna derecha: formulario (la luna corona sobre la tarjeta) */}
         <div className="flex flex-col items-center gap-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="hidden lg:block"
-          >
-            <AsciiDroplet className="text-[9px] text-brand-400/70" />
-          </motion.div>
-
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.15, ease: EASE }}
             className="w-full max-w-sm"
           >
-            <div className="border border-white/15 bg-white/[0.03] p-8">
+            <div className="border border-white/15 bg-[#08090c]/85 p-8 backdrop-blur-md">
               <h2 className="text-sm font-bold uppercase tracking-[0.25em] text-white">
                 Iniciar sesión
               </h2>
