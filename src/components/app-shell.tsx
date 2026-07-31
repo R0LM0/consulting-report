@@ -7,13 +7,13 @@ import { useState, type ReactNode } from "react";
 import {
   ClipboardIcon,
   DashboardIcon,
-  DropletIcon,
   FileTextIcon,
   LogOutIcon,
   MenuIcon,
   SettingsIcon,
   XIcon,
 } from "@/components/icons";
+import { Logo } from "@/components/logo";
 
 interface NavItem {
   href: string;
@@ -36,12 +36,10 @@ function isActive(pathname: string, item: NavItem): boolean {
 function Brand() {
   return (
     <Link href="/" className="flex items-center gap-3 px-2">
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-xl text-white shadow-md shadow-brand-600/30">
-        <DropletIcon />
-      </span>
+      <Logo className="h-10 w-10 shadow-md shadow-brand-600/30" />
       <span className="flex flex-col leading-tight">
-        <span className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-white">
-          R0LM0.DEV
+        <span className="font-mono text-sm font-bold tracking-[0.2em] text-white">
+          r0lm0<span className="text-brand-400">.</span>dev
         </span>
         <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-brand-300">
           reportes·mensuales
@@ -162,10 +160,10 @@ export function AppShell({
       {/* Topbar móvil */}
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200/70 bg-white/80 px-4 py-3 backdrop-blur lg:hidden">
         <span className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-base text-white">
-            <DropletIcon />
+          <Logo className="h-8 w-8" />
+          <span className="font-mono text-sm font-bold tracking-[0.12em] text-slate-900">
+            r0lm0<span className="text-brand-600">.</span>dev
           </span>
-          <span className="text-sm font-bold text-slate-900">R0LM0.DEV</span>
         </span>
         <button
           type="button"
