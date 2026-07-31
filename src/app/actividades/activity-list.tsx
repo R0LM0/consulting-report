@@ -24,12 +24,12 @@ export function ActivityList({
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-300 bg-white/60 py-12 text-center"
+        className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] py-12 text-center"
       >
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-xl text-brand-400">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-500/10 text-xl text-brand-400">
           <ClipboardIcon />
         </span>
-        <p className="max-w-xs text-sm text-slate-500">{emptyMessage}</p>
+        <p className="max-w-xs text-sm text-slate-400">{emptyMessage}</p>
       </motion.div>
     );
   }
@@ -42,7 +42,7 @@ export function ActivityList({
             <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500">
               {group.label}
             </h2>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-slate-500">
+            <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] font-semibold tabular-nums text-slate-400">
               {group.items.length}
             </span>
           </div>

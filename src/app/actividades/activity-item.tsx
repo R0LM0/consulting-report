@@ -28,7 +28,7 @@ export function ActivityItem({ activity }: { activity: ActivityItemData }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   return (
-    <div className="rounded-xl border border-slate-200/80 bg-white shadow-sm transition-shadow hover:shadow-card">
+    <div className="rounded-xl border border-white/[0.07] bg-[#111722] transition-colors hover:border-white/[0.14]">
       <AnimatePresence mode="wait" initial={false}>
         {isEditing ? (
           <motion.form
@@ -83,7 +83,7 @@ export function ActivityItem({ activity }: { activity: ActivityItemData }) {
             <Badge tone="brand" className="mt-0.5 shrink-0 tabular-nums">
               {activity.dateDisplay}
             </Badge>
-            <p className="flex-1 text-sm leading-relaxed whitespace-pre-line text-slate-800">
+            <p className="flex-1 text-sm leading-relaxed whitespace-pre-line text-slate-200">
               {activity.description}
             </p>
             <div className="flex shrink-0 items-center gap-1">
@@ -97,7 +97,7 @@ export function ActivityItem({ activity }: { activity: ActivityItemData }) {
                     transition={{ duration: 0.15 }}
                     className="flex items-center gap-1"
                   >
-                    <span className="mr-1 hidden text-xs font-medium text-red-600 sm:inline">
+                    <span className="mr-1 hidden text-xs font-medium text-red-300 sm:inline">
                       ¿Eliminar?
                     </span>
                     <form action={deleteActivity}>
@@ -107,7 +107,7 @@ export function ActivityItem({ activity }: { activity: ActivityItemData }) {
                         title="Confirmar eliminación"
                         aria-label="Confirmar eliminación"
                         whileTap={{ scale: 0.9 }}
-                        className={`${iconButtonBase} bg-red-50 text-red-600 hover:bg-red-100 focus-visible:outline-red-500`}
+                        className={`${iconButtonBase} bg-red-500/10 text-red-300 hover:bg-red-500/20 focus-visible:outline-red-400`}
                       >
                         <CheckIcon className="text-base" />
                       </motion.button>
@@ -118,7 +118,7 @@ export function ActivityItem({ activity }: { activity: ActivityItemData }) {
                       aria-label="Cancelar eliminación"
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setConfirmingDelete(false)}
-                      className={`${iconButtonBase} text-slate-400 hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-slate-500`}
+                      className={`${iconButtonBase} text-slate-400 hover:bg-white/[0.06] hover:text-slate-200 focus-visible:outline-slate-400`}
                     >
                       <XIcon className="text-base" />
                     </motion.button>
@@ -138,7 +138,7 @@ export function ActivityItem({ activity }: { activity: ActivityItemData }) {
                       aria-label="Editar actividad"
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setIsEditing(true)}
-                      className={`${iconButtonBase} text-slate-400 hover:bg-brand-50 hover:text-brand-600 focus-visible:outline-brand-500`}
+                      className={`${iconButtonBase} text-slate-400 hover:bg-brand-500/10 hover:text-brand-300 focus-visible:outline-brand-400`}
                     >
                       <PencilIcon className="text-base" />
                     </motion.button>
@@ -148,7 +148,7 @@ export function ActivityItem({ activity }: { activity: ActivityItemData }) {
                       aria-label="Eliminar actividad"
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setConfirmingDelete(true)}
-                      className={`${iconButtonBase} text-slate-400 hover:bg-red-50 hover:text-red-600 focus-visible:outline-red-500`}
+                      className={`${iconButtonBase} text-slate-400 hover:bg-red-500/10 hover:text-red-300 focus-visible:outline-red-400`}
                     >
                       <TrashIcon className="text-base" />
                     </motion.button>

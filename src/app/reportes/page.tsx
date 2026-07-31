@@ -92,7 +92,7 @@ export default async function ReportesPage({
 
       {activityCount === 0 ? (
         <FadeIn delay={0.1}>
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <div className="rounded-xl border border-amber-400/25 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
             No hay actividades registradas para este informe. Revisa{" "}
             <span className="font-semibold">Actividades</span> antes de
             generarlo.
@@ -108,7 +108,7 @@ export default async function ReportesPage({
               description="Documento Word con el membrete oficial y la numeración automática"
               icon={<FileTextIcon />}
             />
-            <div className="mb-5 flex-1 rounded-xl bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-500">
+            <div className="mb-5 flex-1 rounded-xl bg-white/[0.04] px-4 py-3 text-xs leading-relaxed text-slate-400">
               Incluye {activityCount} actividad(es) en el formato
               institucional, listo para firmar y entregar.
             </div>
@@ -140,7 +140,7 @@ export default async function ReportesPage({
               viene de tus{" "}
               <Link
                 href="/perfil"
-                className="font-medium text-brand-600 hover:text-brand-800"
+                className="font-medium text-brand-400 hover:text-brand-300"
               >
                 ajustes de perfil
               </Link>
