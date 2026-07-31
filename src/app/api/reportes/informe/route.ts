@@ -3,7 +3,7 @@ import { getCurrentUserId } from "@/lib/auth-user";
 import { prisma } from "@/lib/prisma";
 import { toArrayBuffer } from "@/lib/buffer-response";
 import { generateInforme } from "@/lib/generate-informe";
-import { MESES_ES, getMonthBounds } from "@/lib/months";
+import { MESES_ES, getMonthBounds, getPreviousMonth } from "@/lib/months";
 
 export async function GET(request: Request) {
   const userId = await getCurrentUserId();
@@ -28,7 +28,10 @@ export async function GET(request: Request) {
   }
 
   const mes = MESES_ES[mesNumero - 1];
-  const { start, end } = getMonthBounds(anio, mesNumero);
+  // Convención del consultor: el "Informe de <mes M>" reporta las
+  // actividades trabajadas en el mes ANTERIOR (M-1).
+  const prev = getPreviousMonth(anio, mesNumero);
+  const { start, end } = getMonthBounds(prev.year, prev.month);
 
   const activities = await prisma.activity.findMany({
     where: { userId, date: { gte: start, lt: end } },

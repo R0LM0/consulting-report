@@ -29,6 +29,16 @@ export function getLastDayOfMonth(year: number, month1to12: number): Date {
 }
 
 /**
+ * The month before the given one (handles year rollover: prev of Enero 2027
+ * is Diciembre 2026). Used because the "Informe de <mes M>" reports the
+ * activities worked in month M-1.
+ */
+export function getPreviousMonth(year: number, month1to12: number) {
+  const d = new Date(Date.UTC(year, month1to12 - 2, 1));
+  return { year: d.getUTCFullYear(), month: d.getUTCMonth() + 1 };
+}
+
+/**
  * Parses a `<input type="date">` value ("YYYY-MM-DD") into a UTC-midnight
  * Date. Used for values stored via Prisma's `@db.Date`, so the calendar day
  * round-trips correctly regardless of the server's local timezone.

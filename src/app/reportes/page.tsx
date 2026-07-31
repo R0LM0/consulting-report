@@ -8,6 +8,7 @@ import {
   formatDateInputValue,
   getLastDayOfMonth,
   getMonthBounds,
+  getPreviousMonth,
   parseMonthParam,
   parseYearParam,
 } from "@/lib/months";
@@ -40,12 +41,16 @@ export default async function ReportesPage({
   const selectedYear = parseYearParam(anio, now.getFullYear());
   const selectedMonth = parseMonthParam(mes, now.getMonth() + 1);
 
-  const { start, end } = getMonthBounds(selectedYear, selectedMonth);
+  // El informe del mes M reporta las actividades del mes anterior (M-1).
+  const prev = getPreviousMonth(selectedYear, selectedMonth);
+  const { start: prevStart, end: prevEnd } = getMonthBounds(
+    prev.year,
+    prev.month
+  );
   const activityCount = await prisma.activity.count({
-    where: { userId, date: { gte: start, lt: end } },
+    where: { userId, date: { gte: prevStart, lt: prevEnd } },
   });
 
-  const mesNombre = MESES_ES[selectedMonth - 1];
   const defaultFecha = formatDateInputValue(
     getLastDayOfMonth(selectedYear, selectedMonth)
   );
@@ -58,11 +63,11 @@ export default async function ReportesPage({
         action={
           activityCount > 0 ? (
             <Badge tone="success" className="px-3 py-1 text-sm">
-              {activityCount} actividad(es) en {mesNombre}
+              {activityCount} actividad(es) incluidas
             </Badge>
           ) : (
             <Badge tone="warning" className="px-3 py-1 text-sm">
-              Sin actividades en {mesNombre}
+              Sin actividades para este informe
             </Badge>
           )
         }
@@ -106,9 +111,9 @@ export default async function ReportesPage({
       {activityCount === 0 ? (
         <FadeIn delay={0.1}>
           <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            No hay actividades registradas para {mesNombre} de {selectedYear}.
-            Revisa <span className="font-semibold">Actividades</span> antes de
-            generar el informe.
+            No hay actividades registradas para este informe. Revisa{" "}
+            <span className="font-semibold">Actividades</span> antes de
+            generarlo.
           </div>
         </FadeIn>
       ) : null}
@@ -122,9 +127,8 @@ export default async function ReportesPage({
               icon={<FileTextIcon />}
             />
             <div className="mb-5 flex-1 rounded-xl bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-500">
-              Incluye las {activityCount} actividad(es) de {mesNombre}{" "}
-              {selectedYear} en el formato institucional, listo para firmar y
-              entregar.
+              Incluye {activityCount} actividad(es) en el formato
+              institucional, listo para firmar y entregar.
             </div>
             <form action="/api/reportes/informe" method="get">
               <input type="hidden" name="anio" value={selectedYear} />

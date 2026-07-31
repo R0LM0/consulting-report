@@ -206,7 +206,7 @@ export default async function Home() {
                     Informe de {mesNombre}
                   </span>
                   <span className="block text-xs text-slate-500">
-                    Descargar .docx del mes actual
+                    Descargar .docx listo para entregar
                   </span>
                 </span>
               </a>
