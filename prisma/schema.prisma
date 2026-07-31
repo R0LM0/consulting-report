@@ -19,6 +19,14 @@ model User {
   name         String
   createdAt    DateTime   @default(now())
   activities   Activity[]
+  receipts     Receipt[]
+
+  // Billing defaults, editable in /perfil so the receipt form pre-fills
+  // them. montoSubtotal only changes when the contract does;
+  // receiptNextNumber seeds the automatic receipt counter the first time
+  // (after that it comes from the Receipt records themselves).
+  defaultMontoSubtotal Float?
+  receiptNextNumber    Int?
 }
 
 model Activity {
@@ -33,4 +41,22 @@ model Activity {
   createdAt   DateTime @default(now())
 
   @@index([userId, date])
+}
+
+// Every receipt generated through /api/reportes/recibo is recorded here.
+// One per user/month (upserted), which powers the automatic "next numero"
+// suggestion: max(numero of the year) + 1.
+model Receipt {
+  id            String   @id @default(cuid())
+  numero        Int
+  anio          Int
+  mes           Int
+  montoSubtotal Float
+  fecha         DateTime @db.Date
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
+
+  @@unique([userId, anio, mes])
+  @@index([userId, anio])
 }

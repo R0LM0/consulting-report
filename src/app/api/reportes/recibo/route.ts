@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth-user";
+import { prisma } from "@/lib/prisma";
 import { toArrayBuffer } from "@/lib/buffer-response";
 import { generateRecibo } from "@/lib/generate-recibo";
 import { MESES_ES, parseDateInputLocal } from "@/lib/months";
@@ -37,6 +38,14 @@ export async function GET(request: Request) {
 
   const mes = MESES_ES[mesNumero - 1];
   const fecha = parseDateInputLocal(fechaParam);
+
+  // Registrar el recibo generado (uno por mes; regenerar el mismo mes solo
+  // actualiza). Esto alimenta la sugerencia automática del próximo número.
+  await prisma.receipt.upsert({
+    where: { userId_anio_mes: { userId, anio, mes: mesNumero } },
+    update: { numero, montoSubtotal, fecha },
+    create: { userId, anio, mes: mesNumero, numero, montoSubtotal, fecha },
+  });
 
   const buffer = await generateRecibo({
     mes,

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getCurrentUserId } from "@/lib/auth-user";
@@ -14,16 +15,12 @@ import {
 } from "@/lib/months";
 import { AppShell, PageHeader } from "@/components/app-shell";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { FadeIn } from "@/components/ui/fade-in";
-import { Field, Input, Select } from "@/components/ui/input";
-import {
-  CalendarIcon,
-  DownloadIcon,
-  FileTextIcon,
-  ReceiptIcon,
-} from "@/components/icons";
+import { FileTextIcon, ReceiptIcon } from "@/components/icons";
+import { ReportesFilter } from "./reportes-filter";
+import { InformeButton } from "./informe-button";
+import { ReciboForm } from "./recibo-form";
 
 export default async function ReportesPage({
   searchParams,
@@ -47,13 +44,29 @@ export default async function ReportesPage({
     prev.year,
     prev.month
   );
-  const activityCount = await prisma.activity.count({
-    where: { userId, date: { gte: prevStart, lt: prevEnd } },
-  });
 
+  const [activityCount, user, lastReceipt] = await Promise.all([
+    prisma.activity.count({
+      where: { userId, date: { gte: prevStart, lt: prevEnd } },
+    }),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { defaultMontoSubtotal: true, receiptNextNumber: true },
+    }),
+    prisma.receipt.findFirst({
+      where: { userId, anio: selectedYear },
+      orderBy: { numero: "desc" },
+      select: { numero: true },
+    }),
+  ]);
+
+  const mesNombre = MESES_ES[selectedMonth - 1];
   const defaultFecha = formatDateInputValue(
     getLastDayOfMonth(selectedYear, selectedMonth)
   );
+  const suggestedNumero = lastReceipt
+    ? lastReceipt.numero + 1
+    : (user?.receiptNextNumber ?? null);
 
   return (
     <AppShell user={session.user} signOutAction={signOutAction}>
@@ -74,38 +87,7 @@ export default async function ReportesPage({
       />
 
       <FadeIn delay={0.05}>
-        <form
-          className="grid grid-cols-2 items-end gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card sm:flex sm:flex-wrap"
-          method="get"
-        >
-          <span className="col-span-2 flex items-center gap-2 text-sm font-semibold text-slate-700 sm:col-span-1 sm:mr-auto">
-            <CalendarIcon className="text-base text-brand-600" />
-            Período del reporte
-          </span>
-          <Field label="Mes" htmlFor="mes">
-            <Select id="mes" name="mes" defaultValue={String(selectedMonth)}>
-              {MESES_ES.map((nombre, index) => (
-                <option key={nombre} value={index + 1}>
-                  {nombre}
-                </option>
-              ))}
-            </Select>
-          </Field>
-          <Field label="Año" htmlFor="anio">
-            <Input
-              id="anio"
-              type="number"
-              name="anio"
-              min={2000}
-              max={2100}
-              defaultValue={selectedYear}
-              className="w-full sm:w-24"
-            />
-          </Field>
-          <Button variant="outline" className="col-span-2 sm:col-span-1">
-            Ver mes
-          </Button>
-        </form>
+        <ReportesFilter year={selectedYear} month={selectedMonth} />
       </FadeIn>
 
       {activityCount === 0 ? (
@@ -130,14 +112,11 @@ export default async function ReportesPage({
               Incluye {activityCount} actividad(es) en el formato
               institucional, listo para firmar y entregar.
             </div>
-            <form action="/api/reportes/informe" method="get">
-              <input type="hidden" name="anio" value={selectedYear} />
-              <input type="hidden" name="mes" value={selectedMonth} />
-              <Button className="w-full">
-                <DownloadIcon />
-                Descargar informe .docx
-              </Button>
-            </form>
+            <InformeButton
+              anio={selectedYear}
+              mes={selectedMonth}
+              mesNombre={mesNombre}
+            />
           </Card>
         </FadeIn>
 
@@ -148,52 +127,25 @@ export default async function ReportesPage({
               description="Hoja de Excel con número de recibo, monto y fecha"
               icon={<ReceiptIcon />}
             />
-            <form
-              action="/api/reportes/recibo"
-              method="get"
-              className="flex flex-1 flex-col gap-3"
-            >
-              <input type="hidden" name="anio" value={selectedYear} />
-              <input type="hidden" name="mes" value={selectedMonth} />
-              <div className="grid flex-1 grid-cols-2 gap-3">
-                <Field label="Número de recibo" htmlFor="numero">
-                  <Input
-                    id="numero"
-                    type="number"
-                    name="numero"
-                    placeholder="25"
-                    required
-                  />
-                </Field>
-                <Field label="Subtotal (USD)" htmlFor="montoSubtotal">
-                  <Input
-                    id="montoSubtotal"
-                    type="number"
-                    name="montoSubtotal"
-                    step="0.01"
-                    placeholder="1200"
-                    required
-                  />
-                </Field>
-                <Field
-                  label="Fecha del recibo"
-                  htmlFor="fecha"
-                  className="col-span-2"
-                >
-                  <Input
-                    id="fecha"
-                    type="date"
-                    name="fecha"
-                    defaultValue={defaultFecha}
-                    required
-                  />
-                </Field>
-              </div>
-              <Button variant="secondary" className="w-full">
-                <DownloadIcon />
-                Descargar recibo .xlsx
-              </Button>
-            </form>
+            <ReciboForm
+              anio={selectedYear}
+              mes={selectedMonth}
+              mesNombre={mesNombre}
+              suggestedNumero={suggestedNumero}
+              defaultMonto={user?.defaultMontoSubtotal ?? null}
+              defaultFecha={defaultFecha}
+            />
+            <p className="mt-3 text-[11px] leading-relaxed text-slate-400">
+              El número se sugiere según tus últimos recibos y el subtotal
+              viene de tus{" "}
+              <Link
+                href="/perfil"
+                className="font-medium text-brand-600 hover:text-brand-800"
+              >
+                ajustes de perfil
+              </Link>
+              .
+            </p>
           </Card>
         </FadeIn>
       </div>

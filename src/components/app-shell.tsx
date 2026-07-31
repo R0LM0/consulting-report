@@ -11,6 +11,7 @@ import {
   FileTextIcon,
   LogOutIcon,
   MenuIcon,
+  SettingsIcon,
   XIcon,
 } from "@/components/icons";
 
@@ -25,6 +26,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Panel", icon: <DashboardIcon className="text-lg" />, exact: true },
   { href: "/actividades", label: "Actividades", icon: <ClipboardIcon className="text-lg" /> },
   { href: "/reportes", label: "Reportes", icon: <FileTextIcon className="text-lg" /> },
+  { href: "/perfil", label: "Ajustes", icon: <SettingsIcon className="text-lg" /> },
 ];
 
 function isActive(pathname: string, item: NavItem): boolean {
