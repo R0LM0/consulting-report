@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505;
-  --foreground: #e2e8f0;
+  /* Fondo dark suave (no negro puro) para que el contraste no sea tan duro */
+  --background: #0a0e14;
+  /* Texto principal: blanco suave, no puro */
+  --foreground: #d8e0ec;
+  /* Superficie de tarjetas/paneles */
+  --surface: #111722;
 }
 
 @theme inline {
@@ -54,53 +58,8 @@ body {
   color: var(--color-brand-950);
 }
 
-/* ===== Tema oscuro ASCII — mismo mundo que el login ===== */
-
-/* Tarjetas: la clase .shadow-card marca las superficies de la app */
-.shadow-card,
-.shadow-card-hover {
-  background: rgb(255 255 255 / 0.03) !important;
-  border: 1px solid rgb(255 255 255 / 0.1);
-  border-radius: 6px;
-  box-shadow: none !important;
-}
-
-/* Textos sobre fondo oscuro */
-.text-slate-900 {
-  color: #f1f5f9 !important;
-}
-.text-slate-700,
-.text-slate-600 {
-  color: #cbd5e1 !important;
-}
-.text-slate-500 {
-  color: #94a3b8 !important;
-}
-.text-slate-400 {
-  color: #64748b !important;
-}
-
-/* Superficies claras suaves -> paneles dark */
-.bg-white {
-  background-color: rgb(255 255 255 / 0.03) !important;
-}
-.bg-slate-50 {
-  background-color: rgb(255 255 255 / 0.02) !important;
-}
-.bg-slate-100 {
-  background-color: rgb(255 255 255 / 0.06) !important;
-}
-
-/* Bordes claros -> bordes dark */
-.border-slate-200,
-.border-slate-200\/70,
-.border-slate-100 {
-  border-color: rgb(255 255 255 / 0.1) !important;
-}
-.ring-slate-200,
-.ring-slate-100 {
-  --tw-ring-color: rgb(255 255 255 / 0.1) !important;
-}
+/* ===== Tema oscuro ASCII — mismo mundo que el login =====
+   Los componentes ya nacen dark; aquí solo viven los detalles globales. */
 
 /* Inputs y selects */
 input,
