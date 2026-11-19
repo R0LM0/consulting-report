@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { updateActivity, deleteActivity } from "./actions";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,48 @@ export interface ActivityItemData {
   dateInputValue: string;
   dateDisplay: string;
   description: string;
+}
+
+/** Shows the first 3 lines; a toggle appears only when the text overflows. */
+function ClampedText({ text }: { text: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      if (!isExpanded) setIsOverflowing(el.scrollHeight > el.clientHeight + 1);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [text, isExpanded]);
+
+  return (
+    <div className="min-w-0 flex-1">
+      <p
+        ref={ref}
+        className={`text-sm leading-relaxed whitespace-pre-line text-slate-200 ${
+          isExpanded ? "" : "line-clamp-3"
+        }`}
+      >
+        {text}
+      </p>
+      {isOverflowing || isExpanded ? (
+        <button
+          type="button"
+          onClick={() => setIsExpanded((v) => !v)}
+          aria-expanded={isExpanded}
+          className="mt-1 cursor-pointer text-xs font-semibold text-brand-400 hover:text-brand-300"
+        >
+          {isExpanded ? "Ver menos" : "Ver más"}
+        </button>
+      ) : null}
+    </div>
+  );
 }
 
 const iconButtonBase =
@@ -83,9 +125,7 @@ export function ActivityItem({ activity }: { activity: ActivityItemData }) {
             <Badge tone="brand" className="mt-0.5 shrink-0 tabular-nums">
               {activity.dateDisplay}
             </Badge>
-            <p className="flex-1 text-sm leading-relaxed whitespace-pre-line text-slate-200">
-              {activity.description}
-            </p>
+            <ClampedText text={activity.description} />
             <div className="flex shrink-0 items-center gap-1">
               <AnimatePresence mode="wait" initial={false}>
                 {confirmingDelete ? (

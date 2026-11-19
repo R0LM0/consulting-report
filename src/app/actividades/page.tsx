@@ -48,11 +48,14 @@ export default async function ActividadesPage({
   const activities = (
     await prisma.activity.findMany({
       where: { userId, date: { gte: start, lt: end } },
-      orderBy: [{ date: "asc" }, { createdAt: "asc" }],
+      // Newest first so the latest entries are visible without scrolling.
+      // (Report routes keep ascending order for the documents.)
+      orderBy: [{ date: "desc" }, { createdAt: "desc" }],
     })
   ).filter((a) => selectedMonths.includes(a.date.getUTCMonth() + 1));
 
-  const groups: ActivityGroup[] = selectedMonths
+  const groups: ActivityGroup[] = [...selectedMonths]
+    .reverse()
     .map((month) => ({
       key: `${selectedYear}-${month}`,
       label: `${MESES_ES[month - 1]} ${selectedYear}`,
