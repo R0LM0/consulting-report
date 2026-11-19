@@ -153,7 +153,9 @@ export function ActivityList({
         aria-label="Buscar actividades"
       />
 
-      <div className="grid gap-4 md:grid-cols-[13rem_minmax(0,1fr)] md:items-start">
+      {/* grid-cols-[minmax(0,1fr)]: sin esto, en móvil la pista "auto" crece al ancho
+          de la tira de días y ensancha toda la página (Chrome la achica). */}
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-[13rem_minmax(0,1fr)] md:items-start">
         <DayNav
           months={months}
           selectedKey={isSearching ? null : selectedDay.key}
@@ -222,7 +224,7 @@ function DayNav({
   return (
     <nav
       aria-label="Días con actividades"
-      className="rounded-2xl border border-white/[0.07] bg-[#111722] p-2 md:sticky md:top-4 md:max-h-[calc(100vh-2rem)] md:overflow-y-auto"
+      className="min-w-0 rounded-2xl border border-white/[0.07] bg-[#111722] p-2 md:sticky md:top-4 md:max-h-[calc(100vh-2rem)] md:overflow-y-auto"
     >
       {months.map((month) => (
         <div key={month.key} className="md:mb-2 md:last:mb-0">
