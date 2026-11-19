@@ -237,7 +237,7 @@ export function AppShell({
       </AnimatePresence>
 
       {/* Contenido */}
-      <main className="lg:pl-64">
+      <main className="min-w-0 lg:pl-64">
         <motion.div
           key={pathname}
           initial={{ opacity: 0, y: 8 }}
