@@ -6,6 +6,7 @@ import { signOutAction } from "@/lib/auth-actions";
 import { prisma } from "@/lib/prisma";
 import {
   MESES_ES,
+  addDaysUTC,
   formatDateInputValue,
   getLastDayOfMonth,
   getMonthBounds,
@@ -17,9 +18,10 @@ import { AppShell, PageHeader } from "@/components/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
 import { FadeIn } from "@/components/ui/fade-in";
-import { FileTextIcon, ReceiptIcon } from "@/components/icons";
+import { CalendarIcon, FileTextIcon, ReceiptIcon } from "@/components/icons";
 import { ReportesFilter } from "./reportes-filter";
 import { InformeButton } from "./informe-button";
+import { InformeGiraForm } from "./informe-gira-form";
 import { ReciboForm } from "./recibo-form";
 
 export default async function ReportesPage({
@@ -64,6 +66,14 @@ export default async function ReportesPage({
   const defaultFecha = formatDateInputValue(
     getLastDayOfMonth(selectedYear, selectedMonth)
   );
+  // Field-trip report defaults: Monday of the current week through today.
+  const today = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
+  );
+  const daysSinceMonday = (today.getUTCDay() + 6) % 7;
+  const giraHasta = formatDateInputValue(today);
+  const giraDesde = formatDateInputValue(addDaysUTC(today, -daysSinceMonday));
+
   const suggestedNumero = lastReceipt
     ? lastReceipt.numero + 1
     : (user?.receiptNextNumber ?? null);
@@ -146,6 +156,20 @@ export default async function ReportesPage({
               </Link>
               .
             </p>
+          </Card>
+        </FadeIn>
+
+        <FadeIn delay={0.35} className="md:col-span-2">
+          <Card className="flex h-full flex-col transition-shadow hover:shadow-card-hover">
+            <CardHeader
+              title="Informe de gira de campo"
+              description="Elige el rango de fechas y se incluyen las actividades registradas en esos días"
+              icon={<CalendarIcon />}
+            />
+            <InformeGiraForm
+              defaultDesde={giraDesde}
+              defaultHasta={giraHasta}
+            />
           </Card>
         </FadeIn>
       </div>

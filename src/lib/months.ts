@@ -75,6 +75,46 @@ export function formatDateDisplay(date: Date): string {
   return `${day}/${month}/${year}`;
 }
 
+/** True when `value` is a real "YYYY-MM-DD" calendar date. */
+export function isDateInputValue(value: string | null | undefined): value is string {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = parseDateInputUTC(value);
+  return !Number.isNaN(date.getTime()) && formatDateInputValue(date) === value;
+}
+
+/** Same UTC-midnight Date shifted by `days` calendar days. */
+export function addDaysUTC(date: Date, days: number): Date {
+  return new Date(date.getTime() + days * 24 * 60 * 60 * 1000);
+}
+
+function dayMonth(date: Date): string {
+  return `${date.getUTCDate()} ${MESES_ES[date.getUTCMonth()].toLowerCase()}`;
+}
+
+/**
+ * Period label for a field-trip report, matching the hand-written style of
+ * the delivered documents (lowercase month, "del" before the year):
+ *   same day:   "6 noviembre del 2026"
+ *   same month: "3 al 6 noviembre del 2026"
+ *   same year:  "28 octubre al 2 noviembre del 2026"
+ *   cross-year: "29 diciembre del 2026 al 2 enero del 2027"
+ * Dates are UTC-midnight (as parsed by parseDateInputUTC).
+ */
+export function formatPeriodoGira(desde: Date, hasta: Date): string {
+  const yearFrom = desde.getUTCFullYear();
+  const yearTo = hasta.getUTCFullYear();
+  if (yearFrom !== yearTo) {
+    return `${dayMonth(desde)} del ${yearFrom} al ${dayMonth(hasta)} del ${yearTo}`;
+  }
+  if (desde.getTime() === hasta.getTime()) {
+    return `${dayMonth(hasta)} del ${yearTo}`;
+  }
+  if (desde.getUTCMonth() === hasta.getUTCMonth()) {
+    return `${desde.getUTCDate()} al ${dayMonth(hasta)} del ${yearTo}`;
+  }
+  return `${dayMonth(desde)} al ${dayMonth(hasta)} del ${yearTo}`;
+}
+
 /** Parses a query-string integer, falling back when missing/invalid. */
 export function parseIntOrDefault(
   value: string | undefined,
